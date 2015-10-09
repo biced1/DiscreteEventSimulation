@@ -1,10 +1,14 @@
 package eventSimulation;
 
+import model.Customer;
+
 public abstract class Event {
-	private long ticks;
+	protected long ticks;
+	protected Customer c;
 	
-	public Event(long ticks){
+	public Event(long ticks, Customer c){
 		this.ticks = ticks;
+		this.c = c;
 	}
 	
 	public long getTicks(){

@@ -1,22 +1,23 @@
 package bankEvents;
 
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
 
 import eventHandler.CustomerArrivedEventHandler;
 import eventSimulation.Event;
+import model.Customer;
 
 public class CustomerArrivedEvent extends Event {
 	private List<CustomerArrivedEventHandler> handlers = new ArrayList<CustomerArrivedEventHandler>();
 
-	public CustomerArrivedEvent(long ticks) {
-		super(ticks);
+	public CustomerArrivedEvent(long ticks, Customer c) {
+		super(ticks, c);
 	}
 
 	@Override
 	public void fire() {
 		for (CustomerArrivedEventHandler h : handlers) {
-			h.handleEvent();
+			h.handleEvent(ticks, c);
 		}
 
 	}

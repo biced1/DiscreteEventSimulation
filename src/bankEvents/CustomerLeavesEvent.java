@@ -5,18 +5,19 @@ import java.util.List;
 
 import eventHandler.CustomerLeavesEventHandler;
 import eventSimulation.Event;
+import model.Customer;
 
 public class CustomerLeavesEvent extends Event {
 	private List<CustomerLeavesEventHandler> handlers = new ArrayList<CustomerLeavesEventHandler>();
 
-	public CustomerLeavesEvent(long ticks) {
-		super(ticks);
+	public CustomerLeavesEvent(long ticks, Customer c) {
+		super(ticks, c);
 	}
 
 	@Override
 	public void fire() {
 		for(CustomerLeavesEventHandler h : handlers){
-			h.handleEvent();
+			h.handleEvent(ticks, c);
 		}
 		
 	}
