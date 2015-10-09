@@ -1,8 +1,13 @@
 package bankEvents;
 
+import java.util.List;
+import java.util.ArrayList;
+
+import eventHandler.CustomerArrivedEventHandler;
 import eventSimulation.Event;
 
-public class CustomerArrivedEvent extends Event{
+public class CustomerArrivedEvent extends Event {
+	private List<CustomerArrivedEventHandler> handlers = new ArrayList<CustomerArrivedEventHandler>();
 
 	public CustomerArrivedEvent(long ticks) {
 		super(ticks);
@@ -10,7 +15,13 @@ public class CustomerArrivedEvent extends Event{
 
 	@Override
 	public void fire() {
-		// TODO Auto-generated method stub
-		
+		for (CustomerArrivedEventHandler h : handlers) {
+			h.handleEvent();
+		}
+
+	}
+
+	public void subscribe(CustomerArrivedEventHandler h) {
+		handlers.add(h);
 	}
 }

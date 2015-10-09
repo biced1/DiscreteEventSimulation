@@ -1,5 +1,4 @@
 package eventHandler;
 
-public interface CustomerArrivedEventHandler {
-
+public interface CustomerArrivedEventHandler extends EventHandler {
 }
