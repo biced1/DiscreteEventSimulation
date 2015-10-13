@@ -1,44 +1,32 @@
 package bankSimulation;
 
-import java.util.Random;
-
-import bankEvenHandler.AddCustomerToBankState;
-import bankEvents.CustomerArrivedEvent;
 import model.BankState;
 import model.Customer;
+import bankEventHandler.customerArrivedEventHandler.AddCustomerToBankState;
+import bankEventHandler.customerArrivedEventHandler.AddNextCustomerArriveEvent;
+import bankEventHandler.customerArrivedEventHandler.UpdateBankStateTime;
+import bankEvents.CustomerArrivedEvent;
+import eventSimulation.Events;
 
 public class Simulator {
-	private long ticks = 0;
-	private long nextCustomerId = 1;
 	private BankState state;
 	private int tellers = 1;
 	private int lines = 3;
+	private Events events = new Events();
 	
 	public Simulator(){
 		state = new BankState(tellers, lines);
 	}
 	
 	public void run(){
+		CustomerArrivedEvent e = new CustomerArrivedEvent(state.getCurrentTicks(), new Customer(state.getCurrentCustomerID()));
+		e.subscribe(new AddCustomerToBankState(state));
+		e.subscribe(new UpdateBankStateTime(state));
+		e.subscribe(new AddNextCustomerArriveEvent(events, state));
+		events.addEvent(e);
+		state.incrementCustomerID();
 		while(true){
-			CustomerArrivedEvent e = new CustomerArrivedEvent(ticks, new Customer(nextCustomerId));
-			e.subscribe(new AddCustomerToBankState(state));
-			e.fire();
-			nextCustomerId++;
-			ticks += getRandomWaitTicks(100, 5000);
+			events.fireNextEvent();
 		}
 	}
-	
-	public int getRandomWaitTicks(int minimum, int maximum){
-		Random rand = new Random();
-		int randomTicks = rand.nextInt(maximum) + minimum;
-		try {
-			Thread.sleep(randomTicks);
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return randomTicks;
-	}
-
-
 }

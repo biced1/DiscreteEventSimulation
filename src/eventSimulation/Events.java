@@ -18,8 +18,9 @@ public class Events {
 	
 	public void fireNextEvent(){
 		if(!events.isEmpty()){
-			events.get(0).fire();
-			events.remove(0);
+			Event e = events.get(0);
+			e.fire();
+			events.remove(e);
 		}
 	}
 }

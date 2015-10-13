@@ -8,14 +8,38 @@ public class BankState {
 	private final int TELLERS;
 	private final int LINES;
 	private long currentTicks;
+	private long currentCustomerID;
 	private List<ArrayList<Customer>> customersInLines = new ArrayList<ArrayList<Customer>>();
+	private List<Teller> tellers = new ArrayList<Teller>();
 
 	public BankState(int tellers, int lines) {
 		this.customersWaiting = 0;
 		this.TELLERS = tellers;
 		this.LINES = lines;
 		currentTicks = 0;
+		this.currentCustomerID = 1;
 		populateCustomersInLines();
+		populateTellers();
+	}
+
+	public long getCurrentCustomerID(){
+		return currentCustomerID;
+	}
+	
+	private void populateTellers() {
+		for (int x = 0; x < TELLERS; x++) {
+			tellers.add(new Teller(x));
+		}		
+	}
+	
+	public void incrementCustomerID(){
+		this.currentCustomerID++;
+	}
+	
+	public void setTellerServicing(boolean isServicing, int tellerID){
+		if(tellerID < TELLERS){
+			tellers.get(tellerID).setServicing(isServicing);
+		}
 	}
 
 	private void populateCustomersInLines() {
@@ -94,5 +118,13 @@ public class BankState {
 			lines += newline; 
 		}
 		return lines;
+	}
+
+	public long getLineLength(int line) {
+		long lineLength = 0;
+		if(line < LINES){
+			customersInLines.get(line).size();
+		}
+		return lineLength;
 	}
 }
