@@ -10,7 +10,7 @@ public class Events {
 		int position = 0;
 		for(int x = 1; x < events.size(); x++){
 			if(e.getTicks() > events.get(x).getTicks()){
-				position = x;
+				position = x + 1;
 			}
 		}
 		events.add(position, e);

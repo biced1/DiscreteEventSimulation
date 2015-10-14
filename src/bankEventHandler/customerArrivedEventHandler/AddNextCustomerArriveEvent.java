@@ -22,10 +22,10 @@ public class AddNextCustomerArriveEvent implements CustomerArrivedEventHandler{
 		long nextEventTicks = ticks + getRandomWaitTicks(500, 5000);
 		CustomerArrivedEvent e = new CustomerArrivedEvent(nextEventTicks, new Customer(state.getCurrentCustomerID()));
 		state.incrementCustomerID();
-		e.subscribe(new AddCustomerToBankState(state));
-		e.subscribe(new UpdateBankStateTime(state));
+		e.subscribe(new UpdateBankStateOnArrival(state, events));
 		e.subscribe(new AddNextCustomerArriveEvent(events, state));
 		events.addEvent(e);
+		System.out.println("Added customer arrived event at " + nextEventTicks);
 	}
 	
 	private int getRandomWaitTicks(int minimum, int maximum){
