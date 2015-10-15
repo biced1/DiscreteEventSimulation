@@ -8,6 +8,7 @@ import bankEvents.CustomerCompleteServiceEvent;
 import eventHandler.CustomerStartServiceEventHandler;
 import eventSimulation.Events;
 import model.BankState;
+import model.BankStatistics;
 import model.Customer;
 
 public class AddCustomerCompletedServiceEvent implements CustomerStartServiceEventHandler{
@@ -15,19 +16,21 @@ public class AddCustomerCompletedServiceEvent implements CustomerStartServiceEve
 	private int line;
 	private Events events;
 	private BankState state;
+	private BankStatistics stats;
 	
-	public AddCustomerCompletedServiceEvent(BankState state, Events events, int line) {
+	public AddCustomerCompletedServiceEvent(BankState state, Events events, int line, BankStatistics stats) {
 		this.line = line;
 		this.events = events;
 		this.state = state;
+		this.stats = stats;
 	}
 	
 	@Override
 	public void handleEvent(long ticks, Customer c) {
-		long nextTicks = ticks + getRandomWaitTicks(5000, 10000);
+		long nextTicks = ticks + getRandomWaitTicks(2000, 2000);
 		CustomerCompleteServiceEvent e = new CustomerCompleteServiceEvent(nextTicks, c);
-		e.subscribe(new UpdateBankStateOnServiceComplete(state, line));
-		e.subscribe(new AddStartServiceEvent(events, line, state));
+		e.subscribe(new UpdateBankStateOnServiceComplete(state, line, stats));
+		e.subscribe(new AddStartServiceEvent(events, line, state, stats));
 		events.addEvent(e);
 		System.out.println("added complete service for " + c.ID + " at " + nextTicks);
 		System.out.println(state);

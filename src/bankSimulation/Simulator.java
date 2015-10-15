@@ -7,6 +7,7 @@ import bankEventHandler.customerArrivedEventHandler.UpdateBankStateOnArrival;
 import bankEvents.CustomerArrivedEvent;
 import eventSimulation.Events;
 import model.BankState;
+import model.BankStatistics;
 import model.Customer;
 
 public class Simulator {
@@ -14,6 +15,7 @@ public class Simulator {
 	private int tellers = 3;
 	private int lines = 1;
 	private Events events = new Events();
+	private BankStatistics stats = new BankStatistics();
 
 	public Simulator() {
 		state = new BankState(tellers, lines);
@@ -22,8 +24,8 @@ public class Simulator {
 	public void run() {
 		CustomerArrivedEvent e = new CustomerArrivedEvent(state.getCurrentTicks(),
 				new Customer(state.getCurrentCustomerID()));
-		e.subscribe(new UpdateBankStateOnArrival(state, events));
-		e.subscribe(new AddNextCustomerArriveEvent(events, state));
+		e.subscribe(new UpdateBankStateOnArrival(state, events, stats));
+		e.subscribe(new AddNextCustomerArriveEvent(events, state, stats));
 		events.addEvent(e);
 		state.incrementCustomerID();
 		int eventsTodo = 1;
@@ -33,6 +35,10 @@ public class Simulator {
 			}
 			Scanner scan = new Scanner(System.in);
 			String input = scan.nextLine();
+			if(input.equals("stats")){
+				System.out.println("Average wait time " + stats.getAverageWaitTicks());
+				eventsTodo = 0;
+			}
 			try {
 				eventsTodo = Integer.parseInt(input);
 			} catch (Exception ex) {
